@@ -50,7 +50,7 @@
         let submitButton = document.querySelector('button');
         const form = document.querySelector('#myForm');
         const seenSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="eye"><title>eye-circle</title><path d="M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,16C9.37,16 7,14.43 6,12C7.38,8.69 11.19,7.12 14.5,8.5C16.08,9.16 17.34,10.42 18,12C17,14.43 14.63,16 12,16M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13Z" /></svg>';
-        const trashBook = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="trash"><title>trash-can-outline</title><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" /></svg>'
+        const trashBook = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="trash"><title>trash-can-outline</title><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" /></svg>';
         function Book(name, author, pages, read) {
             this.name = name;
             this.author = author;
@@ -129,24 +129,36 @@
                 widgetInCard.innerHTML = combinedSVGWidget;
                 newCard.appendChild(widgetInCard);
 
-                let eyeSVG = document.querySelector('svg.eye');
-                eyeSVG.setAttribute('data-attribute', i);
-                let trashSVG = document.querySelector('svg.trash');
-                trashSVG.setAttribute('data-attribute', i);
+            }
 
-                eyeSVG.addEventListener('click', function(event) {
-                    let dataValue = eyeSVG.getAttribute('data-attribute');
+            let eyeSVGs = document.querySelectorAll('svg.eye');
+            let trashSVGs = document.querySelectorAll('svg.trash');
+            let trashSVGsArray = Array.from(trashSVGs);
+            let eyeSVGsArray = Array.from(eyeSVGs);
+            let counter = 0;
+            eyeSVGsArray.forEach(element => {
+                element.setAttribute('data-attribute', counter);
+                element.addEventListener('click', function() {
+                    let dataValue = element.getAttribute('data-attribute');
                     myLibrary[dataValue].read = !myLibrary[dataValue].read;
                     displayAll();
                 });
+                counter ++;
+            });
 
-                trashSVG.addEventListener('click', function(event) {
-                    let dataValue = trashSVG.getAttribute('data-attribute');
+            counter = 0;
+
+            trashSVGsArray.forEach(element => {
+                element.setAttribute('data-attribute', counter);
+                element.addEventListener('click', function() {
+                    let dataValue = element.getAttribute('data-attribute');
                     myLibrary.splice(dataValue, 1);
                     displayAll();
                 });
+                counter ++;
+            });
 
-            }
+            
         }
 
         addBookItem.addEventListener('click', popupAppearandBlur);
