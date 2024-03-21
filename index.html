@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet"> 
+    <title>Library</title>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Library</div>
+    </div>
+    <div class="grid-container">
+        <div class="add-book special-card">
+            <div class="add-text">Add book:</div>
+            <div class="plus">+</div>
+        </div>
+    </div>
+
+    <div class="add-new-book-popup element-to-hide">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>window-close</title><path d="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z" /></svg>
+        <form id="myForm">
+            <fieldset class="name">
+                <label for="book-name">Book Name</label>
+                <input type="text" id="book-name" name="book-name" maxlength="20" required>
+            </fieldset>
+            <fieldset class="author">
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" required maxlength="20">
+            </fieldset>
+            <fieldset class="page-count">
+                <label for="pages"># Of Pages</label>
+                <input type="number" id="pages" name="pages" min="0" max="4567" required>
+            </fieldset>
+            <fieldset class="read">
+                <label for="read-status">Read</label>
+                <input type="checkbox" id="read-status" name="read">
+            </fieldset>
+            
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+    <script>
+        const myLibrary = [];
+        let addBookItem = document.querySelector('.add-book');
+        let popUp = document.querySelector('.add-new-book-popup');
+        let gridContainer = document.querySelector('.grid-container');
+        let closePopUp = document.querySelector('div.element-to-hide > svg');
+        let submitButton = document.querySelector('button');
+        const form = document.querySelector('#myForm');
+        const seenSVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="eye"><title>eye-circle</title><path d="M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,16C9.37,16 7,14.43 6,12C7.38,8.69 11.19,7.12 14.5,8.5C16.08,9.16 17.34,10.42 18,12C17,14.43 14.63,16 12,16M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5M12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13Z" /></svg>';
+        const trashBook = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="trash"><title>trash-can-outline</title><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" /></svg>'
+        function Book(name, author, pages, read) {
+            this.name = name;
+            this.author = author;
+            this.pages = pages
+            this.read = read;
+        }
+
+        function addBook(name, author, pages, read){
+            let book = new Book(name, author, pages, read);
+            myLibrary.push(book);
+        }
+
+        function popupAppearandBlur() {
+            popUp.classList.remove('element-to-hide');
+            gridContainer.classList.add('blur');
+        }
+
+        function popUpDissapearandNoBlur () {
+            popUp.classList.add('element-to-hide');
+            gridContainer.classList.remove('blur');
+        }
+
+        function displayAll() {
+
+            let allCards = document.getElementsByClassName('card');
+            let cardsArray = Array.from(allCards);
+            cardsArray.forEach(element => {
+                element.remove();
+            });
+                
+        
+
+            for (i = 0; i < myLibrary.length; i ++) {
+                let newCard = document.createElement('div');
+                newCard.classList.add('card');
+                newCard.setAttribute('data-attribute', i);
+
+                gridContainer.appendChild(newCard);
+
+                let bigInfo = document.createElement('div');
+                bigInfo.classList.add('big-info');
+                newCard.appendChild(bigInfo);
+                
+                let authorInCard = document.createElement('div');
+                authorInCard.innerText = myLibrary[i].author;
+                authorInCard.classList.add('author-in-card');
+                let titleInCard = document.createElement('div');
+                titleInCard.classList.add('title-card');
+                titleInCard.innerText = myLibrary[i].name;
+                bigInfo.appendChild(titleInCard);
+                bigInfo.appendChild(authorInCard);
+
+                let smallInfo = document.createElement('div');
+                smallInfo.classList.add('small-info');
+                let pageAmount = document.createElement('div');
+                pageAmount.innerText = (myLibrary[i].pages + ' pages');
+                pageAmount.classList.add('page-amount');
+
+                let readStatusCard = document.createElement('div');
+
+                if (myLibrary[i].read == true) {
+                    readStatusCard.classList.add('read-yes');
+                }
+
+                readStatusCard.innerText = 'Read';
+                readStatusCard.classList.add('read-status');
+
+                newCard.appendChild(smallInfo);
+                smallInfo.appendChild(pageAmount);
+                smallInfo.appendChild(readStatusCard);
+
+                
+                let widgetInCard = document.createElement('div');
+                widgetInCard.classList.add('widgets');
+                combinedSVGWidget = seenSVG + trashBook;
+                widgetInCard.innerHTML = combinedSVGWidget;
+                newCard.appendChild(widgetInCard);
+
+                let eyeSVG = document.querySelector('svg.eye');
+                eyeSVG.setAttribute('data-attribute', i);
+                let trashSVG = document.querySelector('svg.trash');
+                trashSVG.setAttribute('data-attribute', i);
+
+                eyeSVG.addEventListener('click', function(event) {
+                    let dataValue = eyeSVG.getAttribute('data-attribute');
+                    myLibrary[dataValue].read = !myLibrary[dataValue].read;
+                    displayAll();
+                });
+
+                trashSVG.addEventListener('click', function(event) {
+                    let dataValue = trashSVG.getAttribute('data-attribute');
+                    myLibrary.splice(dataValue, 1);
+                    displayAll();
+                });
+
+            }
+        }
+
+        addBookItem.addEventListener('click', popupAppearandBlur);
+        closePopUp.addEventListener('click', popUpDissapearandNoBlur);
+        
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let name = document.getElementById('book-name').value;
+            let author = document.getElementById('author').value;
+            let pageCount = document.getElementById('pages').value;
+            let readStatus = document.getElementById('read-status').checked;
+            
+            addBook(name, author, pageCount, readStatus);
+
+            popUpDissapearandNoBlur();
+            displayAll();
+        });
+        
+        
+
+        
+
+    </script>
+</body>
+</html>
